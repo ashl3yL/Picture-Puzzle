@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Picture Puzzle</title>
+</head>
+<style>
+    .home {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(2, 300px);
+    }
+    h2{
+        text-align:center;
+    }
+    #score {
+        font-size: larger;
+    }
+    #item_1 {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+    }
+    #item_2 {
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+    }
+    #item_3 {
+        grid-column: 1 / 2;
+        grid-row: 2 / 3;
+    }
+    div {
+        text-align: center;
+    }
+    img.pieces {
+        height: 12%;
+        width: 12%;
+    }
+</style>
+<script>
+    const shuffle = (arr) => {
+        for(i = arr.length - 1; i > 0; i--){
+            const num = Math.floor(Math.random() * (i + 1));
+            temp = arr[i];
+            arr[i] = arr[num];
+            arr[num] = temp;
+        }
+    };
+    function initialize(){
+        begin = false;
+        scoreOutput = document.getElementById("scoreVal");
+        score = 0;
+        win = null;
+        winStr = "";
+        winOutput = document.getElementById("victory");
+
+        pieceNum0 = document.getElementById("piece0");
+        pieceNum1 = document.getElementById("piece1");
+        pieceNum2 = document.getElementById("piece2");
+        pieceNum3 = document.getElementById("piece3");
+        pieceNum4 = document.getElementById("piece4");
+        pieceNum5 = document.getElementById("piece5");
+        pieceNum6 = document.getElementById("piece6");
+        pieceNum7 = document.getElementById("piece7");
+        pieceNum8 = document.getElementById("piece8");
+        pieceNum9 = document.getElementById("piece9");
+        pieceNum10 = document.getElementById("piece10");
+        pieceNum11 = document.getElementById("piece11");
+        pieceNum12 = document.getElementById("piece12");
+        pieceNum13 = document.getElementById("piece13");
+        pieceNum14 = document.getElementById("piece14");
+        pieceNum15 = document.getElementById("piece15");
+
+        piece0Loc = 0;
+        piece1Loc = 1;
+        piece2Loc = 2;
+        piece3Loc = 3;
+        piece4Loc = 4;
+        piece5Loc = 5;
+        piece6Loc = 6;
+        piece7Loc = 7;
+        piece8Loc = 8;
+        piece9Loc = 9;
+        piece10Loc = 10;
+        piece11Loc = 11;
+        piece12Loc = 12;
+        piece13Loc = 13;
+        piece14Loc = 14;
+        piece15Loc = 15;
+
+        currBoard = [piece0Loc, piece1Loc, piece2Loc, piece3Loc, piece4Loc, piece5Loc, piece6Loc, piece7Loc, piece8Loc, piece9Loc, piece10Loc, piece11Loc, piece12Loc, piece13Loc, piece14Loc, piece15Loc];
+
+        firstSelect = null;
+        secondSelect = null;
+        display();
+    }
+    function select(num){
+        if(firstSelect === null){
+            firstSelect = num;
+            if (num === 0) {
+                pieceNum0.style.outline = "5px solid #7d3c98";
+            }
+            if (num === 1) {
+                pieceNum1.style.outline = "5px solid #7d3c98";
+            }
+            if (num === 2) {
+                pieceNum2.style.outline = "5px solid #7d3c98";
+            }
+            if (num === 3) {
+                pieceNum3.style.outline = "5px solid #7d3c98";
+            }
+            if (num === 4) {
+                pieceNum4.style.outline = "5px solid #7d3c98";
+            }
+            if (num === 5) {
+                pieceNum5.style.outline = "5px solid #7d3c98";
+            }
+            if (num === 6) {
+                pieceNum6.style.outline = "5px solid #7d3c98";
+            }
+            if (num === 7) {
+                pieceNum7.style.outline = "5px solid #7d3c98";
+            }
+            if (num === 8) {
+                pieceNum8.style.outline = "5px solid #7d3c98";
+            }
+            if (num === 9) {
+                pieceNum9.style.outline = "5px solid #7d3c98";
+            }
+            if (num === 10) {
+                pieceNum10.style.outline = "5px solid #7d3c98";
+            }
+            if (num === 11) {
+                pieceNum11.style.outline = "5px solid #7d3c98";
+            }
+            if (num === 12) {
+                pieceNum12.style.outline = "5px solid #7d3c98";
+            }
+            if (num === 13) {
+                pieceNum13.style.outline = "5px solid #7d3c98";
+            }
+            if (num === 14) {
+                pieceNum14.style.outline = "5px solid #7d3c98";
+            }
+            if (num === 15) {
+                pieceNum15.style.outline = "5px solid #7d3c98";
+            }
+        }
+        else{
+            secondSelect = num;
+            swap(currBoard);
+            firstSelect = null;
+            secondSelect = null;
+            pieceNum0.style.outline = "";
+            pieceNum1.style.outline = "";
+            pieceNum2.style.outline = "";
+            pieceNum3.style.outline = "";
+            pieceNum4.style.outline = "";
+            pieceNum5.style.outline = "";
+            pieceNum6.style.outline = "";
+            pieceNum7.style.outline = "";
+            pieceNum8.style.outline = "";
+            pieceNum9.style.outline = "";
+            pieceNum10.style.outline = "";
+            pieceNum11.style.outline = "";
+            pieceNum12.style.outline = "";
+            pieceNum13.style.outline = "";
+            pieceNum14.style.outline = "";
+            pieceNum15.style.outline = "";
+        }
+        display();
+    }
+    function swap(arr){
+        let temp = currBoard[firstSelect];
+        currBoard[firstSelect] = currBoard[secondSelect];
+        currBoard[secondSelect] = temp;
+        let win = true;
+        for(i = 0; i < currBoard.length; i++){
+            if(begin && currBoard[i] != i){
+                win = false;
+            }
+        }
+        if(begin && win){
+            winStr = "You Win!!";
+        }
+    }
+    function display(){
+        for(i = 0; i < currBoard.length; i++){
+            if(i === 0){
+                piece0Loc = currBoard[i];
+                move(pieceNum0, currBoard[i]);
+            }
+            else if(i == 1){
+                piece1Loc = currBoard[i];
+                move(pieceNum1, currBoard[i]);
+            }
+            else if(i == 2){
+                piece2Loc = currBoard[i];
+                move(pieceNum2, currBoard[i]);
+            }
+            else if(i == 3){
+                piece3Loc = currBoard[i];
+                move(pieceNum3, currBoard[i]);
+            }
+            else if(i == 4){
+                piece4Loc = currBoard[i];
+                move(pieceNum4, currBoard[i]);
+            }
+            else if(i == 5){
+                piece5Loc = currBoard[i];
+                move(pieceNum5, currBoard[i]);
+            }
+            else if(i == 6){
+                piece6Loc = currBoard[i];
+                move(pieceNum6, currBoard[i]);
+            }
+            else if(i == 7){
+                piece7Loc = currBoard[i];
+                move(pieceNum7, currBoard[i]);
+            }
+            else if(i == 8){
+                piece8Loc = currBoard[i];
+                move(pieceNum8, currBoard[i]);
+            }
+            else if(i == 9){
+                piece9Loc = currBoard[i];
+                move(pieceNum9, currBoard[i]);
+            }
+            else if(i == 10){
+                piece10Loc = currBoard[i];
+                move(pieceNum10, currBoard[i]);
+            }
+            else if(i == 11){
+                piece11Loc = currBoard[i];
+                move(pieceNum11, currBoard[i]);
+            }
+            else if(i == 12){
+                piece12Loc = currBoard[i];
+                move(pieceNum12, currBoard[i]);
+            }
+            else if(i == 13){
+                piece13Loc = currBoard[i];
+                move(pieceNum13, currBoard[i]);
+            }
+            else if(i == 14){
+                piece14Loc = currBoard[i];
+                move(pieceNum14, currBoard[i]);
+            }
+            else if(i == 15){
+                piece15Loc = currBoard[i];
+                move(pieceNum15, currBoard[i]);
+            }
+        }
+        scoreOutput.innerHTML = "Score: " + score;
+        winOutput.innerHTML = winStr;
+    }
+    function move(from, to){
+        let arr = [
+          "row-1-column-1.png", "row-1-column-2.png", "row-1-column-3.png", "row-1-column-4.png", "row-2-column-1.png", "row-2-column-2.png", "row-2-column-3.png", "row-2-column-4.png", "row-3-column-1.png", "row-3-column-2.png", "row-3-column-3.png", "row-3-column-4.png", "row-4-column-1.png", "row-4-column-2.png", "row-4-column-3.png", "row-4-column-4.png"
+        ];
+        from.src = arr[to];
+    }
+</script>
+<body onload = "initialize();">
+    <h1>Picture Puzzle</h1>
+    <p>Can you put the picture back together? <br>Press Shuffle to Start or Restart</p>
+    <button onclick = "shuffle(currBoard); display(); score = 0; begin = true">Shuffle</button>
+    <br> <hr> <br>
+    <div id="scoreVal"></div>
+    <h2 id="victory"></h2>
+    <br>
+    <div>
+        <div>
+            <img class = "pieces" onclick = "select(0); score++;" id = "piece0" src = ""/>
+            <img class = "pieces" onclick = "select(1); score++;" id = "piece1" src = ""/>
+            <img class = "pieces" onclick = "select(2); score++;" id = "piece2" src = ""/>
+            <img class = "pieces" onclick = "select(3); score++;" id = "piece3" src = ""/>
+        </div>
+        <div>
+            <img class = "pieces" onclick = "select(4); score++;" id = "piece4" src = ""/>
+            <img class = "pieces" onclick = "select(5); score++;" id = "piece5" src = ""/>
+            <img class = "pieces" onclick = "select(6); score++;" id = "piece6" src = ""/>
+            <img class = "pieces" onclick = "select(7); score++;" id = "piece7" src = ""/>
+        </div>
+        <div>
+            <img class = "pieces" onclick = "select(8); score++;" id = "piece8" src = ""/>
+            <img class = "pieces" onclick = "select(9); score++;" id = "piece9" src = ""/>
+            <img class = "pieces" onclick = "select(10); score++;" id = "piece10" src = ""/>
+            <img class = "pieces" onclick = "select(11); score++;" id = "piece11" src = ""/>
+        </div>
+        <div>
+            <img class = "pieces" onclick = "select(12); score++;" id = "piece12" src = ""/>
+            <img class = "pieces" onclick = "select(13); score++;" id = "piece13" src = ""/>
+            <img class = "pieces" onclick = "select(14); score++;" id = "piece14" src = ""/>
+            <img class = "pieces" onclick = "select(15); score++;" id = "piece15" src = ""/>
+        </div>
+</body>
+</html>
